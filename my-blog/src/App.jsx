@@ -1,11 +1,13 @@
-import { Router, Route } from "@solidjs/router";
-import Home from "../pages/home.jsx";
+import { Route, Router } from "@solidjs/router";
+import { AuthProvider } from "./components/AuthProvider";
+import Home from "./pages/home.jsx";
 
 export default function App() {
   return (
-    <Router>
-      <Route path="home" component={Home} />
-      
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Route path="/" component={Home} />
+      </Router>
+    </AuthProvider>
   );
 }
