@@ -145,7 +145,7 @@ export default function Home() {
                             <Show when={post.image}>
                                 <div class="h-48 overflow-hidden">
                                     <img
-                                        src={`http://localhost:3030/api/files/${post.collectionId}/${post.id}/${post.image}`}
+                                        src={`http://localhost:3003/api/files/${post.collectionId}/${post.id}/${post.image}`}
                                         alt={post.title}
                                         class="w-full h-full object-cover"
                                     />
