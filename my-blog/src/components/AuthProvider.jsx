@@ -1,24 +1,18 @@
 import { createContext, createSignal, useContext, onMount } from "solid-js";
 import { pb } from "../services/pocketbase";
 
-// Kreiraj kontekst za autentifikaciju
 const AuthContext = createContext();
 
-// AuthProvider komponenta koja će obavijati aplikaciju
 export function AuthProvider(props) {
   const [user, setUser] = createSignal(pb.authStore.model);
 
-  // Osluškuj promjene u autentifikaciji
   onMount(() => {
-    // Postavi trenutno stanje
     setUser(pb.authStore.model);
 
-    // Osluškuj buduće promjene
     const unsubscribe = pb.authStore.onChange((token, model) => {
       setUser(model);
     });
 
-    // Očisti slušatelje kad se komponenta uništi
     return unsubscribe;
   });
 
@@ -50,7 +44,6 @@ export function AuthProvider(props) {
     pb.authStore.clear();
   };
 
-  // Vrijednosti koje želimo izložiti kroz kontekst
   const value = {
     user,
     login,
@@ -65,7 +58,6 @@ export function AuthProvider(props) {
   );
 }
 
-// Hook za pristup kontekstu
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
