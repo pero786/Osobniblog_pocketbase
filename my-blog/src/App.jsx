@@ -7,6 +7,7 @@ import SignIn from "./pages/SignIn.jsx";
 import SignOut from "./pages/SignOut.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Error from "./pages/Error.jsx";
+import CreatePost from "./components/CreatePost.jsx";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/signin" component={SignIn} />
         <Route path="/signout" component={SignOut} />
         <Route path="/signup" component={SignUp} />
+        <Route path="/create" component={CreatePost} />
         <Route path="/error" component={Error} />
         <Route path="*" component={() => <Navigate href="/error" />} />
       </Router>
@@ -35,6 +37,9 @@ function Layout(props) {
         </div>
         <nav class="flex-1 flex gap-2 justify-end">
           <Show when={user()}>
+            <A href="/create" class="px-4 py-2 rounded text-white bg-cyan-600 hover:bg-cyan-700 transition">
+              Novi post
+            </A>
             <A href="/signout" class="px-4 py-2 rounded text-white bg-pink-500 hover:bg-pink-600 transition">
               Odjava
             </A>
