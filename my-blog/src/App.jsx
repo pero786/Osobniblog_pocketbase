@@ -8,6 +8,7 @@ import SignOut from "./pages/SignOut.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Error from "./pages/Error.jsx";
 import CreatePost from "./components/CreatePost.jsx";
+import EditPost from "./components/EditPost.jsx";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/signout" component={SignOut} />
         <Route path="/signup" component={SignUp} />
         <Route path="/create" component={CreatePost} />
+        <Route path="/edit/:id" component={EditPost} />
         <Route path="/error" component={Error} />
         <Route path="*" component={() => <Navigate href="/error" />} />
       </Router>
