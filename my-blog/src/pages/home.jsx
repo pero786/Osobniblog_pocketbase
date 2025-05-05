@@ -1,7 +1,8 @@
-import { createSignal, onMount, For, Show, createEffect } from "solid-js";
+import { createSignal, onMount, For, Show } from "solid-js";
 import { useAuth } from "../components/AuthProvider";
 import { pb } from "../services/pocketbase";
 import { A } from "@solidjs/router";
+import LikeButton from "../components/LikeButton.jsx";
 
 export default function Home() {
   const auth = useAuth();
@@ -9,9 +10,7 @@ export default function Home() {
   const [posts, setPosts] = createSignal([]);
   const [error, setError] = createSignal(null);
 
-  onMount(async () => {
-    await loadPosts();
-  });
+  onMount(loadPosts);
 
   async function loadPosts() {
     setLoading(true);
@@ -23,14 +22,12 @@ export default function Home() {
       });
       setPosts(result);
     } catch (err) {
-      console.error("Greška pri dohvaćanju postova:", err);
-      setError("Nije moguće dohvatiti postove.");
+      setError("Greška pri dohvaćanju postova.");
     } finally {
       setLoading(false);
     }
   }
 
-  // Komponenta za neprijavljene korisnike
   const GuestView = () => (
     <div class="bg-gradient-to-br from-cyan-100 to-blue-200 rounded-lg p-8 shadow-md mb-8">
       <h1 class="text-4xl font-bold text-cyan-800 mb-4">Dobrodošli na Osobni Blog!</h1>
@@ -56,7 +53,6 @@ export default function Home() {
 
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-cyan-700">Najnoviji blogovi</h1>
-        
         <Show when={auth()}>
           <A
             href="/create"
@@ -120,11 +116,14 @@ export default function Home() {
                 <p class="text-gray-600 line-clamp-3">{post.content}</p>
                 <div class="mt-4 flex justify-between items-center">
                   <span class="text-sm text-gray-600">
-                    Autor: {post.expand?.author?.name || "Nepoznato"}
+                    Autor: {post.expand?.author?.name || post.expand?.author?.email || "Nepoznato"}
                   </span>
-                  <Show when={auth() && auth().id === post.author}>
-                    <A href={`/edit/${post.id}`} class="text-amber-600 hover:underline">Uredi</A>
-                  </Show>
+                  <div class="flex gap-2 items-center">
+                    <LikeButton postId={post.id} />
+                    <Show when={auth() && auth().id === post.author}>
+                      <A href={`/edit/${post.id}`} class="text-amber-600 hover:underline">Uredi</A>
+                    </Show>
+                  </div>
                 </div>
               </div>
             </div>

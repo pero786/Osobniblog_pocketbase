@@ -110,23 +110,6 @@ export default function CreatePost() {
                         value={selected() ? selected().title : ""}
                     />
                 </div>
-
-                <div class="space-y-2">
-                    <label class="block text-gray-700 font-medium">Kategorija</label>
-                    <select 
-                        class="w-full border rounded p-2 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" 
-                        name="category"
-                        value={selected() ? selected().category : ""}
-                    >
-                        <option value="">Odaberi kategoriju</option>
-                        <For each={categories()}>
-                            {(category) => (
-                                <option value={category.id}>{category.name}</option>
-                            )}
-                        </For>
-                    </select>
-                </div>
-
                 <div class="space-y-2">
                     <label class="block text-gray-700 font-medium">Sadržaj</label>
                     <textarea 

@@ -37,6 +37,15 @@ function Layout(props) {
         <div class="flex-none">
           <A class="text-4xl font-bold font-sans uppercase text-cyan-600" href="/">{appName}</A>
         </div>
+        
+        <Show when={user()}>
+          <div class="flex-1 flex items-center justify-center">
+            <div class="bg-cyan-50 px-3 py-1 rounded-full text-cyan-800 border border-cyan-200">
+              <span>Korisnik: {user().name || user().email}</span>
+            </div>
+          </div>
+        </Show>
+        
         <nav class="flex-1 flex gap-2 justify-end">
           <Show when={user()}>
             <A href="/create" class="px-4 py-2 rounded text-white bg-cyan-600 hover:bg-cyan-700 transition">
