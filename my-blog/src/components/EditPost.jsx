@@ -17,19 +17,15 @@ export default function EditPost() {
   const [loading, setLoading] = createSignal(true);
   const [success, setSuccess] = createSignal(false);
 
-  // Učitaj kategorije i postojeći post kada se komponenta učita
   onMount(async () => {
     try {
-      // Dohvati kategorije
       const categoriesResult = await pb.collection("categories").getFullList();
       setCategories(categoriesResult);
       
-      // Dohvati post koji se uređuje
       const post = await pb.collection("posts").getOne(params.id, {
         expand: "category"
       });
       
-      // Postavi podatke posta u forme
       setTitle(post.title);
       setContent(post.content);
       setCategory(post.category || "");
@@ -51,13 +47,11 @@ export default function EditPost() {
     setSuccess(false);
     
     try {
-      // Provjera da su naslov i sadržaj uneseni
       if (!title() || !content()) {
         setError("Naslov i sadržaj su obavezni!");
         return;
       }
       
-      // Kreiranje FormData objekta za slanje podataka
       const formData = new FormData();
       formData.append("title", title());
       formData.append("content", content());
@@ -70,12 +64,10 @@ export default function EditPost() {
         formData.append("image", image());
       }
 
-      // Pošalji ažurirani post
       await pb.collection("posts").update(params.id, formData);
       
       setSuccess(true);
       
-      // Preusmjeri nakon kratke pauze
       setTimeout(() => {
         navigate("/");
       }, 1500);

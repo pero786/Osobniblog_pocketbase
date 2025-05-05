@@ -16,7 +16,6 @@ export function AuthProvider(props) {
     return unsubscribe;
   });
 
-  // Metode za autentifikaciju
   const login = async (email, password) => {
     try {
       const authData = await pb.collection('users').authWithPassword(email, password);

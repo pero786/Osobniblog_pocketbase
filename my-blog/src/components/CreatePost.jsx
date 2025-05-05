@@ -51,13 +51,10 @@ export default function CreatePost() {
         const image = event.target.image.files[0];
 
         try {
-            // Provjera da li su obavezna polja ispunjena
             if (!title || !content) {
                 setError("Naslov i sadržaj su obavezni");
                 return;
             }
-
-            // Kreiranje FormData objekta za slanje podataka (uključujući slike)
             const data = new FormData();
             data.append("title", title);
             data.append("content", content);
@@ -72,11 +69,9 @@ export default function CreatePost() {
             }
 
             if (selected()) {
-                // Ažuriranje postojećeg posta
                 await pb.collection("posts").update(selected().id, data);
                 setSelected(null);
             } else {
-                // Kreiranje novog posta
                 await pb.collection("posts").create(data);
             }
 
