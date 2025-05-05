@@ -9,33 +9,36 @@ export default function LikeButton({ postId }) {
   const [likeId, setLikeId] = createSignal(null);
   const [loading, setLoading] = createSignal(false);
 
-  // Učitaj podatke o lajkovima pri mountanju komponente
   onMount(async () => {
     await loadLikes();
   });
 
   async function loadLikes() {
+    if (!postId) return;
+    
     setLoading(true);
     try {
-      // Dohvati sve lajkove za ovaj post
-      const likesList = await pb.collection("likes").getFullList({
-        filter: `post="${postId}"`
+      const likesList = await pb.collection("likes").getList(1, 100, {
+        filter: `post="${postId}"`,
+        $cancelKey: `likes_list_${postId}` 
       });
-      setLikes(likesList.length);
+      setLikes(likesList.totalItems);
 
-      // Provjeri je li trenutni korisnik već lajkao
       if (auth()) {
-        const existingLike = likesList.find(like => like.user === auth().id);
-        if (existingLike) {
+        try {
+          const existingLike = await pb.collection("likes").getFirstListItem(
+            `post="${postId}" && user="${auth().id}"`,
+            { $cancelKey: `like_check_${postId}_${auth().id}` }
+          );
           setUserLiked(true);
           setLikeId(existingLike.id);
-        } else {
+        } catch (err) {
           setUserLiked(false);
           setLikeId(null);
         }
       }
     } catch (error) {
-      console.error("Greška pri dohvaćanju lajkova:", error);
+      console.error("Greška pri učitavanju lajkova:", error);
     } finally {
       setLoading(false);
     }
@@ -47,13 +50,11 @@ export default function LikeButton({ postId }) {
     setLoading(true);
     try {
       if (userLiked()) {
-        // Ako je korisnik već lajkao, ukloni lajk
         await pb.collection("likes").delete(likeId());
         setUserLiked(false);
         setLikeId(null);
         setLikes(likes() - 1);
       } else {
-        // Ako korisnik nije lajkao, dodaj lajk
         const data = {
           post: postId,
           user: auth().id
@@ -65,6 +66,7 @@ export default function LikeButton({ postId }) {
       }
     } catch (error) {
       console.error("Greška pri lajkanju/odlajkanju:", error);
+      await loadLikes();
     } finally {
       setLoading(false);
     }

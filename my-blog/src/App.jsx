@@ -48,19 +48,8 @@ function Layout(props) {
         
         <nav class="flex-1 flex gap-2 justify-end">
           <Show when={user()}>
-            <A href="/create" class="px-4 py-2 rounded text-white bg-cyan-600 hover:bg-cyan-700 transition">
-              Novi post
-            </A>
             <A href="/signout" class="px-4 py-2 rounded text-white bg-pink-500 hover:bg-pink-600 transition">
               Odjava
-            </A>
-          </Show>
-          <Show when={!user()}>
-            <A href="/signin" class="px-4 py-2 rounded text-white bg-amber-500 hover:bg-amber-600 transition">
-              Prijava
-            </A>
-            <A href="/signup" class="px-4 py-2 rounded text-white bg-cyan-600 hover:bg-cyan-700 transition">
-              Registracija
             </A>
           </Show>
         </nav>
