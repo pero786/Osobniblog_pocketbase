@@ -1,20 +1,22 @@
-// src/pages/SignOut.jsx
 import { onMount } from "solid-js";
+import { pb } from "../services/pocketbase";
 import { useNavigate } from "@solidjs/router";
-import { useAuth } from "../components/AuthProvider";
+import AlertMessage from "../components/AlertMessage";
 
 export default function SignOut() {
-  const auth = useAuth();
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  onMount(() => {
-    auth.logout();
-    navigate("/");
-  });
+    onMount(async () => {
+        pb.authStore.clear();
+        
+        setTimeout(() => {
+            navigate("/");
+        }, 1500);
+    });
 
-  return (
-    <div class="flex justify-center items-center p-8">
-      <p class="text-gray-600">Odjavljujemo vas...</p>
-    </div>
-  );
+    return (
+        <div class="max-w-md mx-auto p-8 text-center">
+            <AlertMessage message="Uspješno ste se odjavili." />
+        </div>
+    );
 }

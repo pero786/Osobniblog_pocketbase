@@ -25,42 +25,35 @@ export default function App() {
 
 function Layout(props) {
   const appName = import.meta.env.VITE_APP_NAME || "Osobni Blog";
-  const auth = useAuth();
+  const user = useAuth();
 
   return (
-    <div class="min-h-screen flex flex-col bg-gray-50">
-      <header class="bg-white shadow-sm">
-        <div class="max-w-6xl mx-auto flex flex-row flex-wrap gap-2 items-center p-4">
-          <div class="flex-none">
-            <A class="text-3xl font-bold text-cyan-600" href="/">{appName}</A>
-          </div>
-          <nav class="flex-1 flex gap-3 justify-end items-center">
-            <Show when={auth().user}>
-              <span class="text-sm text-gray-600 mr-2">
-                Dobrodošli, {auth().user.name || auth().user.email}
-              </span>
-              <A href="/signout" class="px-4 py-2 rounded text-white bg-pink-500 hover:bg-pink-600 transition">
-                Odjava
-              </A>
-            </Show>
-            <Show when={!auth().user}>
-              <A href="/signin" class="px-4 py-2 rounded text-white bg-cyan-600 hover:bg-cyan-700 transition">
-                Prijava
-              </A>
-              <A href="/signup" class="px-4 py-2 rounded text-white bg-amber-500 hover:bg-amber-600 transition">
-                Registracija
-              </A>
-            </Show>
-          </nav>
+    <div class="min-h-screen flex flex-col">
+      <header class="flex flex-row flex-wrap gap-2 items-center p-2 flex-none">
+        <div class="flex-none">
+          <A class="text-4xl font-bold font-sans uppercase text-cyan-600" href="/">{appName}</A>
         </div>
+        <nav class="flex-1 flex gap-2 justify-end">
+          <Show when={user()}>
+            <A href="/signout" class="px-4 py-2 rounded text-white bg-pink-500 hover:bg-pink-600 transition">
+              Odjava
+            </A>
+          </Show>
+          <Show when={!user()}>
+            <A href="/signin" class="px-4 py-2 rounded text-white bg-amber-500 hover:bg-amber-600 transition">
+              Prijava
+            </A>
+            <A href="/signup" class="px-4 py-2 rounded text-white bg-cyan-600 hover:bg-cyan-700 transition">
+              Registracija
+            </A>
+          </Show>
+        </nav>
       </header>
 
-      <main class="flex-1 py-6">{props.children}</main>
+      <main class="flex-1">{props.children}</main>
 
-      <footer class="py-6 px-4 bg-cyan-700 text-white text-sm text-center">
-        <div class="max-w-6xl mx-auto">
-          Copyright &copy; {new Date().getFullYear()} {appName} | Sva prava pridržana
-        </div>
+      <footer class="flex-none py-6 px-2 bg-cyan-700 text-white text-sm text-center">
+        Copyright &copy; {new Date().getFullYear()} {appName}
       </footer>
     </div>
   );

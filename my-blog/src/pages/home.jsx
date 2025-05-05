@@ -4,21 +4,20 @@ import { pb } from "../services/pocketbase";
 import { A } from "@solidjs/router";
 
 export default function Home() {
+  // Get auth with optional chaining or fallback
   const auth = useAuth();
   const [loading, setLoading] = createSignal(true);
 
   onMount(() => {
-    // Samo postavi loading na false kad se komponenta učita
     setLoading(false);
   });
 
-  // Komponenta za neprijavljene korisnike
+  // Component for guest users
   const GuestView = () => (
     <div class="bg-gradient-to-br from-cyan-100 to-blue-200 rounded-lg p-8 shadow-md">
       <h1 class="text-4xl font-bold text-cyan-800 mb-4">Dobrodošli na Osobni Blog!</h1>
       <p class="text-lg text-cyan-700 mb-6">
-        Platforma za kreiranje, uređivanje i dijeljenje osobnih blogova.
-        Registriraj se danas i započni svoje blogersko putovanje!
+        Platforma za kreiranje i dijeljenje osobnih blogova.
       </p>
       <div class="flex gap-4 mt-8">
         <A href="/signin" class="px-6 py-3 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition shadow-md">
@@ -31,21 +30,15 @@ export default function Home() {
     </div>
   );
 
-  // Komponenta za prijavljene korisnike
+  // Component for logged-in users
   const UserView = () => (
     <div class="bg-white rounded-lg p-8 shadow-md">
-      <h1 class="text-3xl font-bold text-cyan-700 mb-4">Dobrodošli natrag, {auth().user.name || auth().user.email}!</h1>
+      <h1 class="text-3xl font-bold text-cyan-700 mb-4">
+        Dobrodošli natrag, {auth?.() ? auth().name || auth().email : "korisniče"}!
+      </h1>
       <p class="text-lg text-gray-600 mb-6">
-        Uspješno ste se prijavili u svoj račun. Funkcionalnosti za upravljanje blogovima i postovima bit će uskoro dostupne.
+        Uspješno ste prijavljeni u svoj račun.
       </p>
-      
-      <div class="bg-cyan-50 border-l-4 border-cyan-600 p-4 mb-6">
-        <p class="text-cyan-700">
-          <strong>Status implementacije:</strong> Trenutno su dostupne samo funkcije autentifikacije. 
-          Uskoro će biti implementirane funkcionalnosti za blogove.
-        </p>
-      </div>
-      
       <A href="/signout" class="px-6 py-3 bg-pink-500 text-white rounded-md hover:bg-pink-600 transition shadow-md inline-block">
         Odjava
       </A>
@@ -55,7 +48,8 @@ export default function Home() {
   return (
     <div class="max-w-3xl mx-auto p-4">
       <Show when={!loading()}>
-        <Show when={auth().user} fallback={<GuestView />}>
+        {/* Use optional check for auth() */}
+        <Show when={auth && auth()} fallback={<GuestView />}>
           <UserView />
         </Show>
       </Show>
